@@ -1,11 +1,6 @@
 
 
-- `Dockerfile`  
-- `process_pdfs.py`  
-- `input/` folder (for PDFs)  
-- `output/` folder (for JSON outputs)  
 
-```markdown
 # Challenge 1A: PDF Processing Solution
 
 ## Overview
