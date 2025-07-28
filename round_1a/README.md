@@ -1,45 +1,41 @@
 
+# 📄 Challenge 1A — PDF Outline Extraction  
+**Adobe India Hackathon 2025 — Round 1A: Understand Your Document**
 
+---
 
-# Challenge 1A: PDF Processing Solution
+## 🧠 Overview
 
-## Overview
+Your task is to extract a structured, hierarchical **outline** (Title, H1, H2, H3 with page numbers) from a set of raw PDF documents. This outline serves as the foundational layer for Round 1B and enables future capabilities like semantic navigation, summarization, and intelligent document interaction.
 
-This project provides a sample solution for **Challenge 1A** of the Adobe India Hackathon 2025. The objective is to extract **structured data** from PDF documents and output JSON files representing hierarchical outlines (sections/headings) with corresponding page numbers.
+This solution works **offline**, runs on **CPU-only AMD64 machines**, respects **execution time and model size constraints**, and is fully containerized using Docker.
 
-The solution must:
+---
 
-- Run **offline** without internet access
-- Be **CPU-only**, compatible with AMD64 architecture
-- Process all PDFs placed in the `input/` folder
-- Output JSON files in `output/`, one per PDF with the same basename
-- Be containerized using Docker for portability and reproducibility
-- Complete processing within restrictions on execution time and memory usage
+## 🚧 Problem Constraints
 
-## Directory Structure
+| Constraint         | Requirement                                      |
+|-------------------|--------------------------------------------------|
+| 📄 Input Format    | One or more PDFs (up to 50 pages each)          |
+| 📤 Output Format   | One JSON file per PDF in the required structure |
+| ⏱️ Execution Time  | ≤ 10 seconds per 50-page PDF                    |
+| 💾 Model Size      | ≤ 200 MB (if used)                               |
+| 🌐 Internet Access | ❌ Not allowed                                   |
+| 💻 Platform        | CPU-only, AMD64 (x86_64), Dockerized             |
 
-```
-Challenge_1a/
-├── Dockerfile           # Defines the container image
-├── process_pdfs.py      # Main script processing PDFs
-├── input/               # Place input PDF files here (read-only inside container)
-├── output/              # JSON output files will be generated here
-└── README.md            # This documentation file
-```
+---
 
-## Build Command
+## ⚙️ Build & Run Instructions
 
-Build the Docker image for AMD64 platform:
+### 🔨 Build Docker Image
 
-```
+```bash
 docker build --platform linux/amd64 -t pdf-processor .
-```
+````
 
-## Run Command
+### ▶️ Run the Container
 
-Run the container to process all PDFs in the `input/` folder and output JSONs to `output/`:
-
-```
+```bash
 docker run --rm \
   -v $(pwd)/input:/app/input:ro \
   -v $(pwd)/output:/app/output \
@@ -47,76 +43,78 @@ docker run --rm \
   pdf-processor
 ```
 
-**Note:**  
-- Input PDFs must be located in the local `input` folder before running.  
-- Output JSON files will be written to the local `output` folder after processing.  
-- `--network none` disables network access to enforce offline execution.
-
-## Sample `process_pdfs.py` Behavior
-
-- Scans `/app/input` for all PDF files.
-- For each PDF, extracts hierarchical headings / outlines (currently a placeholder generating dummy data).
-- Writes a JSON file per PDF in `/app/output` folder, matching the PDF filename but with `.json` extension.
-- The JSON output conforms to the official schema required by the challenge.
-
-## Expected Output Format
-
-- JSON files use the same basename as input PDFs (e.g., `document1.pdf` → `document1.json`).
-- Each JSON contains:
-  - Document title
-  - Outline array of headings with level (`H1`, `H2`, `H3`), text, and page number
-- The output matches the schema located in `sample_dataset/schema/output_schema.json` (if provided).
-
-## Critical Constraints
-
-- Execution time: ≤ 10 seconds for a 50-page PDF
-- Model size: ≤ 200MB (if ML models are used)
-- Runtime: CPU-only AMD64 platform (no ARM-specific code)
-- Memory: ≤ 16 GB RAM usage
-- Network: No internet or external API calls allowed during execution
-
-## Testing Your Solution Locally
-
-Use the commands above to build and test with your PDF files placed in the `input/` folder.
-
-Example:
-
-```
-mkdir input output
-# place PDFs in input/
-docker build --platform linux/amd64 -t pdf-processor .
-
-docker run --rm \
-  -v $(pwd)/input:/app/input:ro \
-  -v $(pwd)/output:/app/output \
-  --network none \
-  pdf-processor
-```
-
-## Validation Checklist
-
-- [ ] All PDFs in `input/` directory are processed.
-- [ ] JSON output files are generated with correct filenames in `output/`.
-- [ ] Output JSON strictly matches the required schema.
-- [ ] Execution completes within time and resource limits.
-- [ ] No external network calls during runtime.
-- [ ] Compatible with AMD64 Docker environments.
-- [ ] Works with simple and complex PDFs.
+📁 Place all PDFs inside the `input/` folder
+📁 Extracted JSONs will appear in the `output/` folder
 
 ---
 
-## Notes
+## 📤 Output Format
 
-- This repository currently contains a placeholder processing script generating dummy outputs.
-- For production/challenge submission, implement actual PDF parsing and outline extraction logic.
-- Use open-source libraries like PyMuPDF (`fitz`) for offline PDF text and structure parsing.
+Example output JSON:
 
-## References
-
-- [PyMuPDF Documentation](https://pymupdf.readthedocs.io/en/latest/)
-- [Docker Documentation](https://docs.docker.com/)
-- Adobe India Hackathon 2025 official challenge page
+```json
+{
+  "title": "Understanding AI",
+  "outline": [
+    { "level": "H1", "text": "Introduction", "page": 1 },
+    { "level": "H2", "text": "What is AI?", "page": 2 },
+    { "level": "H3", "text": "History of AI", "page": 3 }
+  ]
+}
+```
 
 ---
 
-# End of README
+## 💡 Solving Methodology
+
+This solution is built using the **PyMuPDF (fitz)** library, which allows efficient access to the content and structure of PDFs.
+
+### 🔍 Heading Detection Strategy
+
+1. **Text Block Parsing**:
+
+   * We iterate through all text blocks on each page using PyMuPDF.
+   * Extract bounding boxes, font sizes, and text strings.
+
+2. **Font Size-Based Heuristics**:
+
+   * Headings are detected based on **font size hierarchy** within a document.
+   * We record all unique font sizes and cluster them into 3 levels: `H1`, `H2`, and `H3`.
+
+3. **Line Position & Formatting**:
+
+   * Headings are assumed to be top-aligned and often bold or centered.
+   * Short length, sentence case, and absence of punctuation help in classification.
+
+4. **Title Extraction**:
+
+   * The largest font on the first page is assumed to be the document title.
+
+5. **Hierarchy Assignment**:
+
+   * Once font sizes are bucketed, each line is tagged with its appropriate level (`H1`, `H2`, `H3`) and page number.
+
+6. **Offline Constraints**:
+
+   * No external models or network calls.
+   * Fully rule-based to comply with the ≤200MB constraint.
+
+### 🧪 Testing
+
+* Tested with various real-world PDFs (simple and complex).
+* Validated against ground-truth outline schemas.
+
+---
+
+## ✅ Submission Checklist
+
+* [x] Dockerfile with CPU-only, amd64-compatible image
+* [x] PDF input handled from `/app/input`
+* [x] JSON output written to `/app/output`
+* [x] Works offline without internet access
+* [x] No hardcoded filenames or file-specific rules
+* [x] README includes approach and execution instructions
+
+---
+
+
