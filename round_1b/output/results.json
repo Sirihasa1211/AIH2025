@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "input_documents": [
+      "doc1.pdf",
+      "doc2.pdf",
+      "doc3.pdf",
+      "doc4.pdf",
+      "doc5.pdf"
+    ],
+    "persona": "Investment Analyst",
+    "job_to_be_done": "Analyze revenue trends and market positioning strategies",
+    "timestamp": "2025-07-28T18:06:08.093960Z"
+  },
+  "extracted_sections": [
+    {
+      "document": "doc2.pdf",
+      "section_title": "Signature Dishes",
+      "page": 3,
+      "importance_rank": 1
+    },
+    {
+      "document": "doc1.pdf",
+      "section_title": "Nice",
+      "page": 4,
+      "importance_rank": 2
+    },
+    {
+      "document": "doc3.pdf",
+      "section_title": "Roman Ruins",
+      "page": 2,
+      "importance_rank": 3
+    },
+    {
+      "document": "doc4.pdf",
+      "section_title": "Annual Celebrations",
+      "page": 2,
+      "importance_rank": 4
+    },
+    {
+      "document": "doc5.pdf",
+      "section_title": "1-Week Itinerary",
+      "page": 4,
+      "importance_rank": 5
+    }
+  ],
+  "subsection_analysis": [
+    {
+      "document": "doc2.pdf",
+      "refined_text": "Bouillabaisse and Ratatouille are staple dishes showcasing the Provence region\u2019s rich culinary history.",
+      "page": 3
+    },
+    {
+      "document": "doc1.pdf",
+      "refined_text": "Nice offers a unique blend of beachside charm and historic architecture, including its famed Promenade des Anglais.",
+      "page": 4
+    },
+    {
+      "document": "doc3.pdf",
+      "refined_text": "N\u00eemes Arena is a well-preserved Roman amphitheater used for events to this day.",
+      "page": 2
+    },
+    {
+      "document": "doc4.pdf",
+      "refined_text": "Nice Carnival is one of the oldest and largest carnivals in the world, attracting thousands every year.",
+      "page": 2
+    },
+    {
+      "document": "doc5.pdf",
+      "refined_text": "A week-long itinerary covers cities like Marseille, Nice, and Avignon, offering a complete cultural immersion.",
+      "page": 4
+    }
+  ]
+}

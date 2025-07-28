@@ -1,0 +1,35 @@
+{
+  "title": "The Ultimate South of France Travel Companion",
+  "outline": [
+    {
+      "level": "H1",
+      "text": "Introduction",
+      "page": 1
+    },
+    {
+      "level": "H1",
+      "text": "General Packing Tips and Tricks",
+      "page": 1
+    },
+    {
+      "level": "H1",
+      "text": "Packing for All Seasons",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Packing for Adults",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Packing for Kids",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "Special Considerations",
+      "page": 5
+    }
+  ]
+}
